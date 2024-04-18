@@ -11,11 +11,11 @@ a2w6MN2TzhY5c6Oh  aliyun
 南口村民委员会              13750000123                         13750000025                               13750000010
 雁洋村民委员会              13750000124                         13750000026                               13750000010
 南上村民委员会              13750000120                         13750000011
-南下村民委员会（未激活）       13750000121                         13750000011
+南下村民委员会（未激活）      13750000121                         13750000011
 小黄村民委员会              13750000122                         13750000011
 湖寮镇黎家坪                13750000042                         13750000041                               13750000040
 松口镇石盘村                13750000012                         13750000011                               13750000010
-阳江                        13751964423、13751964424            13751964422、13751964425                  13751964421、13751964426
+阳江                       13751964423、13751964424            13751964422、13751964425                  13751964421、13751964426
 小河经济					16600000053							16600000002、16600000113
 回岐村新寮					13535990034							13413537877
 塘基村						16600000003							16600000002、16600000113
@@ -34,20 +34,23 @@ os.environ["http_proxy"] = 'http://192.168.123.177:28'
 os.environ["https_proxy"] = 'http://192.168.123.177:28'
 
 
-class public:
+class Public:
     host = 'https://cqjy-test.b2bwings.com'
     uatHost = 'https://cqjy-uat.b2bwings.com'
+    village = '/api/admin/v1/sysCvUser/open/cvLoginByCode'
     admin = '/api/admin/v1/sysUser/open/loginByCode'
     user = '/api/user/v1/user/open/loginByCode'
     # census = '/api/user/v1/user/open/censusLoginByCode'
-    vPhone = input("村集体手机号：")    # 13751964423
+    vPhone = 13751964424   # input("村集体手机号：")
     villagePhone = {"phone": vPhone, "code": "888888"}
-    aPhone = input("审核手机号：")    # 13751964426
+    aPhone = 13751964426    # input("审核手机号：")
     auditPhone = {"phone": aPhone, "code": "888888"}
-    uPhone = input("用户手机号：")    # 13535550504
-    userPhone = {"phone": uPhone, "code": "888888", "user_Type": 1}
+    uPhone = [13751964417, 13535550504, 18320177864]    # input("用户手机号：")
+    userPhone = [{"phone": uPhone[0], "code": "888888", "user_Type": 1},
+                 {"phone": uPhone[1], "code": "888888", "user_Type": 1},
+                 {"phone": uPhone[2], "code": "888888", "user_Type": 1}]
     '''
-    用户登录手机号：13751964417  #袁 13535550504 # 15521289224  法人手机号 13802965035   工行手机号 18902284540   郑组长 17346642256
+    用户登录手机号：13751964417  #袁 13535550504  法人手机号 13802965035   工行手机号 18902284540   郑组长 17346642256
     对应付款帐号：     2               4        3602019309200000266
     '''
 
@@ -60,12 +63,14 @@ class public:
 
     # 根据login获取不同sessionId组装header
     def get_header(self):
-        village = {"sessionid": self.login(self.villagePhone, self.admin), "Content-Type": "application/json",
+        village = {"sessionid": self.login(self.villagePhone, self.village), "Content-Type": "application/json",
                    "channel": "admin"}
         audit = {"sessionid": self.login(self.auditPhone, self.admin), "Content-Type": "application/json",
                  "channel": "admin"}
-        user = {"sessionid": self.login(self.userPhone, self.user), "Content-Type": "application/json"}
-        headers = [village, audit, user]
+        user_1 = {"sessionid": self.login(self.userPhone[0], self.user), "Content-Type": "application/json"}
+        user_2 = {"sessionid": self.login(self.userPhone[1], self.user), "Content-Type": "application/json"}
+        user_3 = {"sessionid": self.login(self.userPhone[2], self.user), "Content-Type": "application/json"}
+        headers = [village, audit, user_1, user_2, user_3]
         # print(headers)
         return headers
 

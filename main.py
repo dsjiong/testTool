@@ -20,11 +20,7 @@ from aution.auction import *
 
 # 按装订区域中的绿色按钮以运行脚本。
 if __name__ == '__main__':
-    # print(resource_path('PATH'))
-    suite = unittest.TestSuite()
-    suite.addTest(Auction)
-    runner = unittest.TextTestRunner
-
-    runner.run(suite)
+    a = False
+    print(not a)
 
 # 访问 https://www.jetbrains.com/help/pycharm/ 获取 PyCharm 帮助
