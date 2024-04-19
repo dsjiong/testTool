@@ -27,6 +27,7 @@ import json
 import os
 import requests
 import urllib3
+import time
 
 # cert_file = '/path/to/certificate.pem'
 urllib3.disable_warnings()
@@ -79,10 +80,19 @@ class Public:
         # header = self.getSessionId()
         post = requests.post(url=self.host + url, headers=header, data=json.dumps(data), verify=False)
         try:
-            post.raise_for_status()
+            # 检查响应状态码，通常200表示请求成功
+            if post.status_code == 200:
+                return post.json()  # 返回响应的JSON数据
+            else:
+                # 如果响应状态码不是200，抛出异常
+                post.raise_for_status()
             return post.json()
         except requests.exceptions.RequestException as e:
-            print("请求接口失败:", e)
+            # 捕获异常，并打印异常信息
+            print("Exception occurred:", e)
+            # 等待一段时间后重新发起请求
+            time.sleep(1)
+            return post(self, url, data, header)  # 递归调用自身重新发起请求
 
 
 if __name__ == '__main__':
